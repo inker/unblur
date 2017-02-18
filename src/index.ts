@@ -16,18 +16,22 @@ const defaultUnblurOptions: UnblurOptions = {
     allBrowsers: false,
 }
 
-const translate3dRe = /translate3d\s*\((.+?,\s*.+?),\s*.+?\s*\)/i
-const translateReplacer = 'translate($1)'
+// const translate3dRe = /translate3d\s*\((.+?,\s*.+?),\s*.+?\s*\)/ig
+// const translateReplacer = 'translate($1)'
+// const scale3dRe = /scale3d\s*\((.+?,\s*.+?),\s*.+?\s*\)/ig
+// const scaleReplacer = 'scale($1)'
+const re3d = /(translate|scale)3d\s*\((.+?,\s*.+?),\s*.+?\s*\)/ig
+const replacer2d = '$1($2)'
 
 function fixBlurry(els: HTMLElement[]) {
     for (const { style } of els) {
         if (style && style.transform) {
-            style.transform = style.transform.replace(translate3dRe, translateReplacer)
+            style.transform = style.transform.replace(re3d, replacer2d)
         }
     }
 }
 
-const selector = '[style*="translate3d"]'
+const selector = '[style*="translate3d"], [style*="scale3d"]'
 
 export default (options: UnblurOptions = {}) => {
     const newOptions = { ...defaultUnblurOptions, ...options }
@@ -42,10 +46,8 @@ export default (options: UnblurOptions = {}) => {
     } else if (log) {
         console.log('running unblur')
     }
-    // allBrowsers true, chrome true -> do 
-    // allBrowsers true, chrome false -> do
-    // allBrowsers false, chrome true -> do
-    // allBrowsers false, chrome false -> not
+
+    const next = interval === 0 ? requestAnimationFrame : (bar) => setTimeout(bar, interval)
 
     ; (function foo() {
         if (!skipIf || !skipIf()) {
@@ -59,44 +61,6 @@ export default (options: UnblurOptions = {}) => {
         } else if (log) {
             console.log('cancelled')
         }
-        setTimeout(foo, interval)
+        next(foo)
     }())
 }
-
-// debounce()
-
-// export default (options: UnblurOptions = {}) => {
-//     const newOptions = { ...defaultUnblurOptions, ...options }
-//     const { interval, element, skipIf, log, allBrowsers } = newOptions
-
-//     function foo(els: HTMLElement[]) {
-//         if (skipIf && skipIf()) {
-//             setTimeout(foo, interval, els)
-//         } else {
-//             fixBlurry(els)
-//         }
-//     }
-
-//     const fixBlurryThrottled = debounce(fixBlurry, interval)
-//     const fixMutated = (mutations: MutationRecord[]) => fixBlurryThrottled(mutations.map(m => m.target as HTMLElement))
-//     const observer = new MutationObserver(mutations => {
-//         const skip = skipIf && skipIf()
-//         if (log) {
-//             console.log('elements', mutations.map(m => m.target))
-//             if (skip) {
-//                 console.log('cancelled')
-//             } else {
-//                 console.log('fixing blur')
-//                 fixMutated(mutations)
-//             }
-//         } else if (!skip) {
-//             fixMutated(mutations)
-//         }
-//     })
-//     const config = {
-//         attributes: true,
-//         subtree: true,
-//         attributeFilter: ['style'],
-//     }
-//     observer.observe(element, config)
-// }
