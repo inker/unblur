@@ -13,34 +13,33 @@ const defaultUnblurOptions: UnblurOptions = {
 }
 
 const translate3dRe = /translate3d\s*\((.+?,\s*.+?),\s*.+?\s*\)/i
+const translateReplacer = 'translate($1)'
 
 function fixBlurry(els: HTMLElement[]) {
     for (const { style } of els) {
         if (style && style.transform) {
-            style.transform = style.transform.replace(translate3dRe, 'translate($1)')
+            style.transform = style.transform.replace(translate3dRe, translateReplacer)
         }
     }
 }
 
+const fixMutated = (mutations: MutationRecord[]) => fixBlurry(mutations.map(m => m.target as HTMLElement))
+
 export default (options: UnblurOptions = {}) => {
-    options = {
-        ...defaultUnblurOptions,
-        ...options,
-    }
-    const { skipWhen } = options
-    const cb = (mutations: MutationRecord[]) => {
+    const newOptions = { ...defaultUnblurOptions, ...options }
+    const { interval, element, skipWhen } = newOptions
+
+    const throttledCallback = throttle(fixMutated, interval)
+    const observer = new MutationObserver(mutations => {
         if (skipWhen && skipWhen()) {
-            console.log('cancelling')
             return
         }
-        fixBlurry(mutations.map(m => m.target as HTMLElement))
-    }
-    const onChange = throttle(cb, options.interval)
-    const observer = new MutationObserver(onChange)
+        throttledCallback(mutations)
+    })
     const config = {
         attributes: true,
         subtree: true,
         attributeFilter: ['style'],
     }
-    observer.observe(options.element as Node, config)
+    observer.observe(element, config)
 }
