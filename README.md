@@ -10,13 +10,13 @@ npm install --save unblur
 ```
 
 ## Usage
-Basic usage
+Basic usage:
 ```javascript
 import unblur from 'unblur'
 
 unblur()
 ```
-One may also use optional parameters
+One may also use optional parameters:
 ```javascript
 unblur({
   // the root element which children to unblur (default is document.body)
