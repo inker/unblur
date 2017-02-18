@@ -1,4 +1,4 @@
-import { throttle } from 'lodash'
+import { debounce } from 'lodash'
 
 export interface UnblurOptions {
     interval?: number,
@@ -23,18 +23,16 @@ function fixBlurry(els: HTMLElement[]) {
     }
 }
 
-const fixMutated = (mutations: MutationRecord[]) => fixBlurry(mutations.map(m => m.target as HTMLElement))
-
 export default (options: UnblurOptions = {}) => {
     const newOptions = { ...defaultUnblurOptions, ...options }
     const { interval, element, skipWhen } = newOptions
 
-    const throttledCallback = throttle(fixMutated, interval)
+    const fixBlurryThrottled = debounce(fixBlurry, interval)
+    const fixMutated = (mutations: MutationRecord[]) => fixBlurryThrottled(mutations.map(m => m.target as HTMLElement))
     const observer = new MutationObserver(mutations => {
-        if (skipWhen && skipWhen()) {
-            return
+        if (!skipWhen || !skipWhen()) {
+            fixMutated(mutations)
         }
-        throttledCallback(mutations)
     })
     const config = {
         attributes: true,
