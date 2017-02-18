@@ -26,6 +26,7 @@ unblur({
   // skip the invocation if the predicate evaluates to true (default is undefined)
   skipWhen: () => document.querySelectorAll('[style*="transition"').length > 0,
 })
+```
 
 [npm-url]: https://npmjs.org/package/unblur
 [downloads-image]: http://img.shields.io/npm/dm/unblur.svg
