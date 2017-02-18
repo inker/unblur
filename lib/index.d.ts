@@ -1,7 +1,7 @@
 export interface UnblurOptions {
     interval?: number;
     element?: Node;
-    skipWhen?: () => boolean;
+    skipIf?: () => boolean;
     log?: boolean;
 }
 declare var _default: (options?: UnblurOptions) => void;

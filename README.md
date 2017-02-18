@@ -24,7 +24,7 @@ unblur({
   // the interval in ms at which to invoke the unblur function (default is 1000)
   interval: 5000,
   // skip the invocation if the predicate evaluates to true (default is undefined)
-  skipWhen: () => document.querySelectorAll('[style*="transition"').length > 0,
+  skipIf: () => document.querySelectorAll('[style*="transition"').length > 0,
   // primitive logging (default is false)
   log: true,
 })

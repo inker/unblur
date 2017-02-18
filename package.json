@@ -1,6 +1,6 @@
 {
   "name": "unblur",
-  "version": "0.1.5",
+  "version": "0.2.1",
   "description": "A tool to fix blurry text on Webkit-based browsers",
   "main": "index.js",
   "types": "lib/index.d.ts",

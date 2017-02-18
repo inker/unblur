@@ -3,14 +3,14 @@ import { debounce } from 'lodash'
 export interface UnblurOptions {
     interval?: number,
     element?: Node,
-    skipWhen?: () => boolean,
+    skipIf?: () => boolean,
     log?: boolean,
 }
 
 const defaultUnblurOptions: UnblurOptions = {
     interval: 1000,
     element: document.body,
-    skipWhen: undefined,
+    skipIf: undefined,
     log: false,
 }
 
@@ -27,28 +27,51 @@ function fixBlurry(els: HTMLElement[]) {
 
 export default (options: UnblurOptions = {}) => {
     const newOptions = { ...defaultUnblurOptions, ...options }
-    const { interval, element, skipWhen, log } = newOptions
+    const { interval, element, skipIf, log } = newOptions
 
-    const fixBlurryThrottled = debounce(fixBlurry, interval)
-    const fixMutated = (mutations: MutationRecord[]) => fixBlurryThrottled(mutations.map(m => m.target as HTMLElement))
-    const observer = new MutationObserver(mutations => {
-        const skip = skipWhen && skipWhen()
-        if (log) {
-            console.log('elements', mutations.map(m => m.target))
-            if (skip) {
-                console.log('cancelled')
-            } else {
-                console.log('fixing blur')
-                fixMutated(mutations)
-            }
-        } else if (!skip) {
-            fixMutated(mutations)
+    function foo() {
+        if (!skipIf || !skipIf()) {
+            const els = document.querySelectorAll('[style*="translate3d"]') as any as HTMLElement[]
+            fixBlurry(els)
         }
-    })
-    const config = {
-        attributes: true,
-        subtree: true,
-        attributeFilter: ['style'],
+        setTimeout(foo, interval)
     }
-    observer.observe(element, config)
 }
+
+// debounce()
+
+// export default (options: UnblurOptions = {}) => {
+//     const newOptions = { ...defaultUnblurOptions, ...options }
+//     const { interval, element, skipIf, log } = newOptions
+
+//     function foo(els: HTMLElement[]) {
+//         if (skipIf && skipIf()) {
+//             setTimeout(foo, interval, els)
+//         } else {
+//             fixBlurry(els)
+//         }
+//     }
+
+//     const fixBlurryThrottled = debounce(fixBlurry, interval)
+//     const fixMutated = (mutations: MutationRecord[]) => fixBlurryThrottled(mutations.map(m => m.target as HTMLElement))
+//     const observer = new MutationObserver(mutations => {
+//         const skip = skipIf && skipIf()
+//         if (log) {
+//             console.log('elements', mutations.map(m => m.target))
+//             if (skip) {
+//                 console.log('cancelled')
+//             } else {
+//                 console.log('fixing blur')
+//                 fixMutated(mutations)
+//             }
+//         } else if (!skip) {
+//             fixMutated(mutations)
+//         }
+//     })
+//     const config = {
+//         attributes: true,
+//         subtree: true,
+//         attributeFilter: ['style'],
+//     }
+//     observer.observe(element, config)
+// }
