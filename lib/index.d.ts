@@ -1,6 +1,6 @@
 export interface UnblurOptions {
     interval?: number;
-    element?: Node;
+    element?: Element;
     skipIf?: () => boolean;
     log?: boolean;
 }

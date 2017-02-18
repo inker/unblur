@@ -2,7 +2,7 @@ import { debounce } from 'lodash'
 
 export interface UnblurOptions {
     interval?: number,
-    element?: Node,
+    element?: Element,
     skipIf?: () => boolean,
     log?: boolean,
 }
@@ -25,17 +25,21 @@ function fixBlurry(els: HTMLElement[]) {
     }
 }
 
+const selector = '[style*="translate3d"]'
+
 export default (options: UnblurOptions = {}) => {
     const newOptions = { ...defaultUnblurOptions, ...options }
     const { interval, element, skipIf, log } = newOptions
 
     ; (function foo() {
         if (!skipIf || !skipIf()) {
-            const els = document.querySelectorAll('[style*="translate3d"]') as any as HTMLElement[]
-            if (log) {
-                console.log('fixing translate3d:', els.length, 'elements')
+            const els = element.querySelectorAll(selector) as any as HTMLElement[]
+            if (els.length > 0) {
+                if (log) {
+                    console.log('fixing translate3d:', els.length, 'elements')
+                }
+                fixBlurry(els)                
             }
-            fixBlurry(els)
         } else if (log) {
             console.log('cancelled')
         }
