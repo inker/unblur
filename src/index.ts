@@ -32,13 +32,17 @@ export default (options: UnblurOptions = {}) => {
     const fixBlurryThrottled = debounce(fixBlurry, interval)
     const fixMutated = (mutations: MutationRecord[]) => fixBlurryThrottled(mutations.map(m => m.target as HTMLElement))
     const observer = new MutationObserver(mutations => {
-        if (!skipWhen || !skipWhen()) {
-            if (log) {
-                console.log('fixing mutated')
+        const skip = skipWhen && skipWhen()
+        if (log) {
+            console.log('elements', mutations.map(m => m.target))
+            if (skip) {
+                console.log('cancelled')
+            } else {
+                console.log('fixing blur')
+                fixMutated(mutations)
             }
+        } else if (!skip) {
             fixMutated(mutations)
-        } else if (log) {
-            console.log('cancelled')
         }
     })
     const config = {
