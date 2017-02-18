@@ -29,13 +29,18 @@ export default (options: UnblurOptions = {}) => {
     const newOptions = { ...defaultUnblurOptions, ...options }
     const { interval, element, skipIf, log } = newOptions
 
-    function foo() {
+    ; (function foo() {
         if (!skipIf || !skipIf()) {
             const els = document.querySelectorAll('[style*="translate3d"]') as any as HTMLElement[]
+            if (log) {
+                console.log('fixing translate3d:', els.length, 'elements')
+            }
             fixBlurry(els)
+        } else if (log) {
+            console.log('cancelled')
         }
         setTimeout(foo, interval)
-    }
+    }())
 }
 
 // debounce()
