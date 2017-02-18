@@ -5,6 +5,7 @@ export interface UnblurOptions {
     element?: Element,
     skipIf?: () => boolean,
     log?: boolean,
+    allBrowsers?: boolean
 }
 
 const defaultUnblurOptions: UnblurOptions = {
@@ -12,6 +13,7 @@ const defaultUnblurOptions: UnblurOptions = {
     element: document.body,
     skipIf: undefined,
     log: false,
+    allBrowsers: false,
 }
 
 const translate3dRe = /translate3d\s*\((.+?,\s*.+?),\s*.+?\s*\)/i
@@ -29,7 +31,21 @@ const selector = '[style*="translate3d"]'
 
 export default (options: UnblurOptions = {}) => {
     const newOptions = { ...defaultUnblurOptions, ...options }
-    const { interval, element, skipIf, log } = newOptions
+    const { interval, element, skipIf, log, allBrowsers } = newOptions
+    const { userAgent } = navigator
+    const isWebkitDesktop = userAgent.includes('AppleWebKit') && !userAgent.includes('Mobile')
+    if (!allBrowsers && !isWebkitDesktop) {
+        if (log) {
+            console.log('not desktop webkit, do nothing')
+        }
+        return
+    } else if (log) {
+        console.log('running unblur')
+    }
+    // allBrowsers true, chrome true -> do 
+    // allBrowsers true, chrome false -> do
+    // allBrowsers false, chrome true -> do
+    // allBrowsers false, chrome false -> not
 
     ; (function foo() {
         if (!skipIf || !skipIf()) {
@@ -51,7 +67,7 @@ export default (options: UnblurOptions = {}) => {
 
 // export default (options: UnblurOptions = {}) => {
 //     const newOptions = { ...defaultUnblurOptions, ...options }
-//     const { interval, element, skipIf, log } = newOptions
+//     const { interval, element, skipIf, log, allBrowsers } = newOptions
 
 //     function foo(els: HTMLElement[]) {
 //         if (skipIf && skipIf()) {
