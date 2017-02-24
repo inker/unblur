@@ -33,7 +33,13 @@ function fixBlurry(els: HTMLElement[]) {
 
 const selector = '[style*="translate3d"], [style*="scale3d"]'
 
+let called = false
+
 export default (options: UnblurOptions = {}) => {
+    if (called) {
+        throw new Error('unblur can be called only once!')
+    }
+    called = true
     const newOptions = { ...defaultUnblurOptions, ...options }
     const { interval, element, skipIf, log, allBrowsers } = newOptions
     const { userAgent } = navigator
@@ -49,7 +55,7 @@ export default (options: UnblurOptions = {}) => {
 
     const next = interval === 0 ? requestAnimationFrame : (bar) => setTimeout(bar, interval)
 
-    ; (function foo() {
+    ; (function checkAndUnblur() {
         if (!skipIf || !skipIf()) {
             const els = element.querySelectorAll(selector) as any as HTMLElement[]
             if (els.length > 0) {
@@ -61,6 +67,6 @@ export default (options: UnblurOptions = {}) => {
         } else if (log) {
             console.log('cancelled')
         }
-        next(foo)
+        next(checkAndUnblur)
     }())
 }

@@ -25,6 +25,8 @@ unblur({
   interval: 5000,
   // skip the invocation if the predicate evaluates to true (default is undefined)
   skipIf: () => document.querySelectorAll('[style*="transition"').length > 0,
+  // enable for all browsers rather than just desktop Webkit (default is false)
+  allBrowsers: true,
   // primitive logging (default is false)
   log: true,
 })
