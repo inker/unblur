@@ -35,6 +35,9 @@ const selector = '[style*="translate3d"], [style*="scale3d"]'
 
 let called = false
 
+/**
+ * Fixes blurry text on WebKit-based browsers. This function can be called only once.
+ */
 export default (options: UnblurOptions = {}) => {
     if (called) {
         throw new Error('unblur can be called only once!')

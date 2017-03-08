@@ -2,7 +2,7 @@
 
 [![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Dependency status][david-dm-image]][david-dm-url] [![Dev Dependency status][david-dm-dev-image]][david-dm-dev-url]
 
-A tool to fix blurry text on Webkit-based browsers. With a given interval, dirty-checks for any elements with on them `translate3d` and replaces it with `translate`.
+A tool to fix blurry text on WebKit-based browsers. With a given interval, dirty-checks for any elements with on them `translate3d` and replaces it with `translate`.
 
 ## Installation
 ```
@@ -14,6 +14,8 @@ Basic usage:
 ```javascript
 import unblur from 'unblur'
 
+// add this code somewhere around the entry point of your application
+// this function can only be called once
 unblur()
 ```
 One may also use optional parameters:

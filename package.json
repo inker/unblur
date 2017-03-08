@@ -1,7 +1,7 @@
 {
   "name": "unblur",
-  "version": "0.5.1",
-  "description": "A tool to fix blurry text on Webkit-based browsers",
+  "version": "0.5.2",
+  "description": "Fixes blurry text on WebKit-based browsers",
   "main": "index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -17,11 +17,12 @@
     "blurry",
     "chrome",
     "translate3d",
-    "text"
+    "text",
+    "webkit"
   ],
   "author": "Anton Veselyev",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^2.1.5"
+    "typescript": "^2.2.1"
   }
 }
