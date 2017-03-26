@@ -5,10 +5,10 @@ export interface UnblurOptions {
     element?: Element,
     skipIf?: () => boolean,
     log?: boolean,
-    allBrowsers?: boolean
+    allBrowsers?: boolean,
 }
 
-const defaultUnblurOptions: UnblurOptions = {
+const defaultUnblurOptions = {
     interval: 1000,
     element: document.body,
     skipIf: undefined,
@@ -56,7 +56,7 @@ export default (options: UnblurOptions = {}) => {
         console.log('running unblur')
     }
 
-    const next = interval === 0 ? requestAnimationFrame : (bar) => setTimeout(bar, interval)
+    const next = interval === 0 ? requestAnimationFrame : (func) => setTimeout(func, interval)
 
     ; (function checkAndUnblur() {
         if (!skipIf || !skipIf()) {
