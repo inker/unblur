@@ -1,5 +1,3 @@
-import { debounce } from 'lodash'
-
 export interface UnblurOptions {
     interval?: number,
     element?: Element,
