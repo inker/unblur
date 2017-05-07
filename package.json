@@ -1,6 +1,6 @@
 {
   "name": "unblur",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Fixes blurry text on WebKit-based browsers",
   "main": "index.js",
   "types": "lib/index.d.ts",
@@ -23,6 +23,6 @@
   "author": "Anton Veselyev",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^2.2.1"
+    "typescript": "^2.3.2"
   }
 }
