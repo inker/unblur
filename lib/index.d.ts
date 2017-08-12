@@ -5,5 +5,5 @@ export interface UnblurOptions {
     log?: boolean;
     allBrowsers?: boolean;
 }
-declare var _default: (options?: UnblurOptions) => void;
+declare const _default: (options?: UnblurOptions) => void;
 export default _default;
