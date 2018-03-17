@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
+        "target": "es2017",
+        "module": "esnext",
         "sourceMap": true,
         // "watch": true,
         "pretty": true,
-        "lib": [ "dom", "es7" ],
+        "lib": [ "dom", "es2017" ],
         "declaration": true,
         "alwaysStrict": true,
         "strictNullChecks": true,
